@@ -4,7 +4,7 @@ package Paths::Tree;
 @EXPORT_OK = qw/tree()/;
 
 require 5.005_62;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use strict;
 
@@ -20,12 +20,14 @@ sub new {
 }
 
 
+
 sub tree {
-        my ($self , $father, $level ) = @_;
+        my ($self , $father, $level ,%h) = @_;
 	$father = $self->{origin} unless $father;
         foreach my $child ( @{$self->{tree}{$father} }) {
+		last if $h{$child};$h{$child}=1;
 		$self->{sub}->($child,$level);
-                $self->tree($child, ($level + 1) ) if $self->{tree}{$child};
+                $self->tree($child, ($level + 1),%h ) if $self->{tree}{$child};
         }
 }
 
